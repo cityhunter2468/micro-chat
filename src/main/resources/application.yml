@@ -12,9 +12,50 @@ spring:
       allowed-methods: "*"
       allowed-headers: "*"
 
-# Logging configuration
+# Logging for Eureka debugging
 logging:
   level:
+    com.netflix.discovery: INFO
+    com.netflix.eureka: INFO
+    org.springframework.cloud.netflix.eureka: INFO
     com.example.chatservice: DEBUG
     org.springframework.web.socket: DEBUG
     org.springframework.messaging: DEBUG
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true  # Enable service discovery
+    registry-fetch-interval-seconds: 30
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: /actuator
+      exposure:
+        include: "*"
+    jmx:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    info:
+      enabled: true
+  health:
+    probes:
+      enabled: true
+    liveness-state:
+      enabled: true
+    readiness-state:
+      enabled: true
